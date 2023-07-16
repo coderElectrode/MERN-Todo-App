@@ -11,6 +11,12 @@ function App() {
   //add new todo item to database
   const addItem = async (e) => {
     e.preventDefault();
+    if(!itemText)
+    {
+      
+      return alert("Enter Task value")
+    }
+    
     try{
       const res = await axios.post('http://localhost:5500/api/item', {item: itemText})
       setListItems(prev => [...prev, res.data]);
@@ -46,6 +52,14 @@ function App() {
   }
 
   //Update item
+const update=(id,item)=>{
+
+setUpdateItemText(item);
+  setIsUpdating(id);
+ debugger;
+
+}
+
   const updateItem = async (e) => {
     e.preventDefault()
     try{
@@ -62,7 +76,8 @@ function App() {
   //before updating item we need to show input field where we will create our updated item
   const renderUpdateForm = () => (
     <form className="update-form" onSubmit={(e)=>{updateItem(e)}} >
-      <input className="update-new-input" type="text" placeholder="New Item" onChange={e=>{setUpdateItemText(e.target.value)}} value={updateItemText} />
+     
+      <input className="update-new-input" type="text"  onChange={e=>{setUpdateItemText(e.target.value)}} value={updateItemText} />
       <button className="update-new-btn" type="submit">Update</button>
     </form>
   )
@@ -83,7 +98,7 @@ function App() {
               ? renderUpdateForm()
               : <>
                   <p className="item-content">{item.item}</p>
-                  <button className="update-item" onClick={()=>{setIsUpdating(item._id)}}>Update</button>
+                  <button className="update-item" onClick={()=>{update(item._id,item.item) }}>Update</button>
                   <button className="delete-item" onClick={()=>{deleteItem(item._id)}}>Delete</button>
                 </>
             }
